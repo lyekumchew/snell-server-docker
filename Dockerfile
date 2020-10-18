@@ -1,19 +1,18 @@
 FROM jeanblanchard/alpine-glibc:latest
 
-ARG SNELL_VERSION="2.0.1"
-# ARG SNELL_URI="https://github.com/surge-networks/snell/releases/download/2.0.0/snell-server-v2.0.0-linux-amd64.zip"
+LABEL maintainer="AUTUMN"
 
-ENV TZ=Asia/Shanghai
+RUN apk add --update libstdc++ \
+	&& apk add --no-cache --virtual .build-deps curl \
+	# download the latest version release
+	&& curl -s https://api.github.com/repos/surge-networks/snell/releases/latest | grep "browser_download_url" | \
+		grep "linux-amd64" | cut -d '"' -f 4 | xargs -n 1 curl -sSL -O \
+    && unzip *.zip && mv snell-server /usr/local/bin/ \
+	&& chmod +x /usr/local/bin/snell-server \
+	&& apk del .build-deps \
+	&& rm -rf /var/cache/apk/* \
+    && rm -rf *.zip
 
-WORKDIR /tmp
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-COPY start.sh /start.sh
-RUN apk add --update libstdc++ && rm -rf /var/cache/apk/* && \
-    wget https://github.com/surge-networks/snell/releases/download/v${SNELL_VERSION}/snell-server-v${SNELL_VERSION}-linux-amd64.zip && \
-    unzip snell-server-v${SNELL_VERSION}-linux-amd64.zip && \
-    mv snell-server /usr/bin/ && rm snell-server-v${SNELL_VERSION}-linux-amd64.zip
-    # wget ${SNELL_URI} && \
-    # unzip snell-server-v2.0.0-linux-amd64.zip && \
-    # mv snell-server /usr/bin/ && rm snell-server-v2.0.0-linux-amd64.zip
-
-ENTRYPOINT /start.sh
+ENTRYPOINT /docker-entrypoint.sh

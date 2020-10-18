@@ -2,7 +2,7 @@
 
 # docker run -e PSK=<your_psk_here> -p<your_host_port_here>:9102 --restart unless-stopped -d snell-server:latest
 
-BIN="/usr/bin/snell-server"
+BIN="/usr/local/bin/snell-server"
 CONF="/etc/snell-server.conf"
 
 # reuse existing config when the container restarts
