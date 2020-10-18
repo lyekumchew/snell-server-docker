@@ -28,12 +28,16 @@ else
 fi
 
 if [ -z ${OBFS} ]; then
-    OBFS=tls
+    PORT=32423
+fi
+
+if [ -z ${PORT} ]; then
+    PSK=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
 fi
 
 echo "Generating new config..."
 echo "[snell-server]" >> ${CONF}
-echo "listen = 0.0.0.0:9102" >> ${CONF}
+echo "listen = 0.0.0.0:${PORT}" >> ${CONF}
 echo "psk = ${PSK}" >> ${CONF}
 echo "obfs = ${OBFS}" >> ${CONF}
 

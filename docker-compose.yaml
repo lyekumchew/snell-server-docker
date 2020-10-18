@@ -4,7 +4,7 @@ services:
     image: ghcr.io/lyekumchew/snell-server
     restart: always
     ports:
-      - "9102:9102"
+      - "32423:32423"
     environment:
       - PSK=fuckbaidu
       - OBFS=off
