@@ -1,0 +1,22 @@
+FROM debian:10-slim
+
+LABEL maintainer="AUTUMN"
+
+RUN apt update \
+	&& apt install curl unzip -y \
+	# download the latest version release
+	&& curl -s https://api.github.com/repos/surge-networks/snell/releases/latest | grep "browser_download_url" | \
+		grep "linux-amd64" | cut -d '"' -f 4 | xargs -n 1 curl -sSL -O \
+    && unzip *.zip && mv snell-server /usr/local/bin/ \
+	&& chmod +x /usr/local/bin/snell-server \
+	# && rm -rf /var/cache/apk/* \
+    && rm -rf *.zip \
+	&& apt purge curl unzip -y \
+	&& apt autoremove -y && apt autoclean -y \
+	&& rm -rf /var/cache/apt/archives/*
+
+RUN cat "precedence ::ffff:0:0/96  100" >> /etc/gai.conf
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT /docker-entrypoint.sh
