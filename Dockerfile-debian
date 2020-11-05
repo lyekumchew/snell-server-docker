@@ -15,7 +15,7 @@ RUN apt update \
 	&& apt autoremove -y && apt autoclean -y \
 	&& rm -rf /var/cache/apt/archives/*
 
-RUN cat "precedence ::ffff:0:0/96  100" >> /etc/gai.conf
+RUN echo "precedence ::ffff:0:0/96  100" >> /etc/gai.conf
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
