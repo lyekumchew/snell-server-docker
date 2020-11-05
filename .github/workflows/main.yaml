@@ -29,7 +29,6 @@ jobs:
           password: ${{ secrets.CR_PAT }}
       -
         name: Build and push (alpine)
-        id: docker_build_alpine
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -41,7 +40,6 @@ jobs:
             ghcr.io/lyekumchew/snell-server:alpine
       -
         name: Build and push (debian)
-        id: docker_build_debian
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -49,7 +47,3 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ghcr.io/lyekumchew/snell-server:debian
-      -
-        name: Debian Image digest
-        run: echo ${{ steps.docker_build_alpine.outputs.digest }} |
-              echo ${{ steps.docker_build_debian.outputs.digest }}
